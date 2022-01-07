@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/** Grid adminhtml routes xml
+ * @category  Company
+ * @package   Company_Grid
+ * @author    Company
+ * @copyright Copyright (c) 2010-2016 Company Software Private Limited (https://Company.com)
+ * @license   https://store.Company.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="grid" frontName="grid">
+            <module name="Company_Grid" />
+        </route>
+    </router>
+</config>

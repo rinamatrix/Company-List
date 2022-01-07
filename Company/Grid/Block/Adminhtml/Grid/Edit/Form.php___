@@ -1,0 +1,362 @@
+<?php
+/**
+ * Company_Grid Add New Row Form Admin Block.
+ * @category    Company
+ * @package     Company_Grid
+ * @author      Company Software Private Limited
+ *
+ */
+namespace Company\Grid\Block\Adminhtml\Grid\Edit;
+
+/**
+ * Adminhtml Add New Row Form.
+ */
+class Form extends \Magento\Backend\Block\Widget\Form\Generic
+{
+    /**
+     * @var \Magento\Store\Model\System\Store
+     */
+    protected $_systemStore;
+
+    /**
+     * @param \Magento\Backend\Block\Template\Context $context,
+     * @param \Magento\Framework\Registry $registry,
+     * @param \Magento\Framework\Data\FormFactory $formFactory,
+     * @param \Magento\Cms\Model\Wysiwyg\Config $wysiwygConfig,
+     * @param \Company\Grid\Model\Status $options,
+     */
+    public function __construct(
+        \Magento\Backend\Block\Template\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\Data\FormFactory $formFactory,
+        \Magento\Cms\Model\Wysiwyg\Config $wysiwygConfig,
+         \Magento\Directory\Model\Config\Source\Country $countryFactory,
+        \Company\Grid\Model\Status $options,
+        array $data = []
+    ) {
+        $this->_options = $options;
+        $this->_wysiwygConfig = $wysiwygConfig;
+         $this->_countryFactory = $countryFactory;
+        parent::__construct($context, $registry, $formFactory, $data);
+    }
+
+    /**
+     * Prepare form.
+     *
+     * @return $this
+     */
+    protected function _prepareForm()
+    {
+        $dateFormat = $this->_localeDate->getDateFormat(\IntlDateFormatter::SHORT);
+        $model = $this->_coreRegistry->registry('row_data');
+        $form = $this->_formFactory->create(
+            ['data' => [
+                            'id' => 'edit_form',
+                            'enctype' => 'multipart/form-data',
+                            'action' => $this->getData('action'),
+                            'method' => 'post'
+                        ]
+            ]
+        );
+
+        $form->setHtmlIdPrefix('wkgrid_');
+        if ($model->getEntityId()) {
+            $fieldset = $form->addFieldset(
+                'base_fieldset',
+                ['legend' => __('Edit Customer Data'), 'class' => 'fieldset-wide']
+            );
+            $fieldset->addField('entity_id', 'hidden', ['name' => 'entity_id']);
+        } else {
+            $fieldset = $form->addFieldset(
+                'base_fieldset',
+                ['legend' => __('Add Customer Data'), 'class' => 'fieldset-wide']
+            );
+        }
+
+         //$optionsc=$this->_countryFactory->toOptionArray();
+
+        $fieldset->addField(
+            'company_name',
+            'text',
+            [
+                'name' => 'company_name',
+                'label' => __('Company Name'),
+                'id' => 'company_name',
+                'title' => __('Company Name'),
+                'class' => 'required-entry validate-alpha',
+                'required' => true,
+            ]
+        );
+
+        $fieldset->addField(
+            'companysite_url',
+            'text',
+            [
+                'name' => 'companysite_url',
+                'label' => __('Company Site Url'),
+                'id' => 'companysite_url',
+                'title' => __('Company Site Url'),
+                'class' => 'required-entry validate-clean-url',
+                'required' => true,
+            ]
+        );
+
+        $fieldset->addField(
+            'sales_person_firstname',
+            'text',
+            [
+                'name' => 'sales_person_firstname',
+                'label' => __('Sales person Firstname'),
+                'id' => 'sales_person_firstname',
+                'title' => __('Sales person name'),
+                'class' => 'required-entry validate-alpha',
+                'required' => true,
+            ]
+        );
+        $fieldset->addField(
+            'sales_person_middlename',
+            'text',
+            [
+                'name' => 'sales_person_middlename',
+                'label' => __('Sales Person Middlename'),
+                'id' => 'sales_person_middlename',
+                'title' => __('Sales Person Middlename'),
+                'class' => 'validate-alpha',
+                'required' => false,
+            ]
+        );
+     
+        $fieldset->addField(
+            'sales_person_lastname',
+            'text',
+            [
+                'name' => 'sales_person_lastname',
+                'label' => __('Sales Person Lastname'),
+                'id' => 'sales_person_lastname',
+                'title' => __('Sales Person Lastname'),
+                'class' => 'required-entry validate-alpha',
+                'required' => true,
+            ]
+        );
+        $fieldset->addField(
+            'sales_person_mailid',
+            'text',
+            [
+                'name' => 'sales_person_mailid',
+                'label' => __('Sales person Email'),
+                'id' => 'sales_person_mailid',
+                'title' => __('Sales person Email'),
+                'class' => 'required-entry validate-email',
+                'required' => true,
+            ]
+        );
+        $fieldset->addField(
+            'sales_person_contactnumber',
+            'text',
+            [
+                'name' => 'sales_person_contactnumber',
+                'label' => __('Sales person Contact Number'),
+                'id' => 'sales_person_contactnumber',
+                'title' => __('Sales person Contact Number'),
+                'class' => 'required-entry validate-phoneLax',
+                'required' => true,
+            ]
+        );
+        $fieldset->addField(
+            'company_address1',
+            'text',
+            [
+                'name' => 'company_address1',
+                'label' => __('Company Address 1'),
+                'id' => 'company_address1',
+                'title' => __('Company Address 1'),
+                'class' => 'required-entry validate-street',
+                'required' => true,
+            ]
+        );
+        $fieldset->addField(
+            'company_address2',
+            'text',
+            [
+                'name' => 'company_address2',
+                'label' => __('Company Address 2'),
+                'id' => 'company_address2',
+                'title' => __('Company Address 2'),
+                'class' => 'validate-street',
+                'required' => false,
+            ]
+        );
+        $fieldset->addField(
+            'company_city',
+            'text',
+            [
+                'name' => 'company_city',
+                'label' => __('City'),
+                'id' => 'company_city',
+                'title' => __('City'),
+                'class' => 'required-entry letters-only',
+                'required' => true,
+            ]
+        );
+
+        $optionsc=$this->_countryFactory->toOptionArray();
+        $country = $fieldset->addField(
+        'country',
+        'select',
+        [
+        'name' => 'country',
+        'label' => __('Country'),
+        'title' => __('country'),
+        'values' => $optionsc,
+        ]
+        );
+         
+        $statename = $fieldset->addField(
+        'state',
+        'select',
+        [
+        'name' => 'state',
+        'label' => __('State'),
+        'id' => 'state',
+        'title' => __('state'),
+        'class' => 'required-entry',
+        'required' => false,
+        'values' => ['--Please Select State--'],
+        ]
+        );
+        $fieldset->addField(
+        'statename',
+        'text',
+        [
+        'name' => 'statename',
+        'label' => __('State'),
+        'id' => 'statename',
+        'title' => __('state'),
+        'class' => 'statename',
+        'required' => false,
+        ]
+        );         
+       
+        $fieldset->addField(
+            'company_pincode',
+            'text',
+            [
+                'name' => 'company_pincode',
+                'label' => __('Pincode'),
+                'id' => 'company_pincode',
+                'title' => __('Pincode'),
+                'class' => 'required-entry validate-alphanum',
+                'required' => true,
+            ]
+        );
+
+
+/*
+* Add Ajax to the Country select box html output
+*/
+$country->setAfterElementHtml(" 
+<script type=\"text/javascript\">
+require([
+'jquery',
+'mage/template',
+'jquery/ui',
+'mage/translate'
+],
+function($, mageTemplate) {
+jQuery('.field-statename').hide();
+ 
+jQuery('#wkgrid_country').change(function(){
+var conceptName = jQuery('#wkgrid_country').find(':selected').val();
+ //console.log(conceptName);
+jQuery.ajax({
+url : '". $this->getUrl('grid/lists/regionlist') . "?country=' + conceptName,
+data: conceptName,
+type: 'GET',
+dataType: 'json',
+showLoader:true,
+success: function(data){
+ //console.log(data.htmlconent);
+if(data.htmlconent==''){
+    //jQuery('#wkgrid_statename').val('');
+jQuery('.field-statename').show();
+jQuery('.field-state').hide();
+}else{
+jQuery('#wkgrid_state').empty().append(data.htmlconent);
+jQuery('.field-state').show();
+jQuery('.field-statename').hide();
+ 
+}
+ 
+}
+}); 
+});
+ 
+}
+ 
+);
+</script>"
+);
+ 
+$statename->setAfterElementHtml(" 
+<script type=\"text/javascript\">
+require([
+'jquery',
+'mage/template',
+'jquery/ui',
+'mage/translate'
+],
+function($, mageTemplate) {
+jQuery('.field-statename').hide();
+jQuery(window).load(function(){
+setTimeout(function(){
+    var xxxx ='".$model->getState()."';
+    var statename ='".$model->getState()."';
+    console.log(xxxx);
+    jQuery('#wkgrid_state option[value=statename]').attr('selected', 'selected'); 
+        jQuery('#wkgrid_state option').each(function (a, b) {
+
+            jQuery('#wkgrid_state option[value=statename]').attr('selected', 'selected'); 
+        if (jQuery(this).text().toLowerCase() == statename.toLowerCase() ){
+                jQuery(this).attr('selected','selected');
+                jQuery(this).trigger('change');
+ 
+            }
+        });
+    }, 2000);
+});
+ 
+setTimeout(function(){
+    var xxxx ='".$model->getState()."';
+    var statename ='".$model->getState()."';
+    console.log(xxxx);
+    jQuery('#wkgrid_state option[value=statename]').attr('selected', 'selected'); 
+        jQuery('#wkgrid_state option').each(function (a, b) {
+
+            jQuery('#wkgrid_state option[value=statename]').attr('selected', 'selected'); 
+        if (jQuery(this).text().toLowerCase() == statename.toLowerCase() ){
+                jQuery(this).attr('selected','selected');
+                jQuery(this).trigger('change');
+ 
+            }
+        });
+    }, 1000);
+ 
+var conceptName = jQuery('#wkgrid_country').find(':selected').val();
+    if(conceptName != ''){
+        jQuery('#wkgrid_country').trigger('change');
+    }
+}
+ 
+);
+</script>"
+);
+ 
+
+
+        $form->setValues($model->getData());
+        $form->setUseContainer(true);
+        $this->setForm($form);
+
+        return parent::_prepareForm();
+    }
+}

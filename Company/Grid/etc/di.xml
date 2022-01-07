@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/** Grid di xml
+ * @category  Company
+ * @package   Company_Grid
+ * @author    Company
+ * @copyright Copyright (c) 2010-2017 Company Software Private Limited (https://Company.com)
+ * @license   https://store.Company.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Company\Grid\Api\Data\GridInterface" type="Company\Grid\Model\Grid" />
+
+    <virtualType name="Company\Grid\Model\ResourceModel\Grid\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">company_grid_records</argument>
+            <argument name="resourceModel" xsi:type="string">Company\Grid\Model\ResourceModel\Grid</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="grid_record_grid_list_data_source" xsi:type="string">Company\Grid\Model\ResourceModel\Grid\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Company\Grid\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Company\Grid\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customLogHandler</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Company\Grid\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Company
+ * @package   Company_Grid
+ * @author    Company
+ * @copyright Copyright (c) 2010-2017 Company Software Private Limited (https://Company.com)
+ * @license   https://store.Company.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Company_Grid::manager" title="Company List" module="Company_Grid" sortOrder="10" resource="Company_Grid::manager" />
+        <add id="Company_Grid::add_row" title="Company List" module="Company_Grid" sortOrder="20" parent="Company_Grid::manager" action="grid/grid" resource="Company_Grid::add_row"/>
+    </menu>
+</config>
